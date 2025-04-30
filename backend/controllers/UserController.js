@@ -2,8 +2,6 @@ import UserModel from "../models/user.model.js";
 
 export async function SignupController(req, res) {
     try {
-
-         // Extract the token from the Authorization header
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res
@@ -13,7 +11,7 @@ export async function SignupController(req, res) {
     const accessToken = authHeader.split(" ")[1];
     // Fetch user info from Auth0
     const response = await axios.get(
-      "https://dev-lb7ute8ee6lu4fpr.us.auth0.com/userinfo",
+      "https://genai-867290465585772.us.auth0.com/userinfo",
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -22,9 +20,9 @@ export async function SignupController(req, res) {
     );
     const userinfo = response.data;
     const newAuth0Id = userinfo.sub;
-    // Get the latest Auth0 ID
+
     console.log(userinfo);
-    // Check if user already exists in the database by email or auth0Id
+
     let user = await UserModel.findOne({
       $or: [{ email: userinfo.email }, { auth0Id: userinfo.sub }],
     });

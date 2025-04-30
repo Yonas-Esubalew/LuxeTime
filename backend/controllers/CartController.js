@@ -1,28 +1,28 @@
 // Load environment variables
 import dotenv from "dotenv";
-import paypal from '@paypal/checkout-server-sdk';
+// import paypal from '@paypal/checkout-server-sdk';
 dotenv.config();
 
 // Import necessary modules
 import mongoose from "mongoose";
-import Stripe from "stripe";
+// import Stripe from "stripe";
 
 // Import your models
 import CartProductModel from "../models/cartproduct.model.js";
 import UserModel from "../models/user.model.js";
 
-// Initialize Stripe with secret key from .env
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: "2022-11-15", // ✅ optional but recommended for stability
-});
-console.log("Stripe Secret Key:", process.env.STRIPE_SECRET_KEY); // Should NOT be undefined
+// // Initialize Stripe with secret key from .env
+// const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+//   apiVersion: "2022-11-15", // ✅ optional but recommended for stability
+// });
+// console.log("Stripe Secret Key:", process.env.STRIPE_SECRET_KEY); // Should NOT be undefined
 
-// Configure PayPal environment
-const clientId = process.env.PAYPAL_CLIENT_ID;
-const clientSecret = process.env.PAYPAL_CLIENT_SECRET;
+// // Configure PayPal environment
+// const clientId = process.env.PAYPAL_CLIENT_ID;
+// const clientSecret = process.env.PAYPAL_CLIENT_SECRET;
 
-const environment = new paypal.core.SandboxEnvironment(clientId, clientSecret);
-const paypalClient = new paypal.core.PayPalHttpClient(environment);
+// const environment = new paypal.core.SandboxEnvironment(clientId, clientSecret);
+// const paypalClient = new paypal.core.PayPalHttpClient(environment);
 
 export const addToCart = async (req, res) => {
   try {
@@ -275,83 +275,83 @@ export const getUserCartByAdmin = async (req, res) => {
 };
 
 
-export const CheckOut = async (req, res, next) => {
-  try {
-    const cart = req.body;
+// export const CheckOut = async (req, res, next) => {
+//   try {
+//     const cart = req.body;
 
-    if (!Array.isArray(cart) || cart.length === 0) {
-      return res.status(400).json({ message: "❌ Empty cart" });
-    }
+//     if (!Array.isArray(cart) || cart.length === 0) {
+//       return res.status(400).json({ message: "❌ Empty cart" });
+//     }
 
-    const lineItems = cart.map((item) => ({
-      price_data: {
-        currency: "usd",
-        product_data: {
-          name: item.name,
-          images: [item.image],
-        },
-        unit_amount: Math.round(item.price * 100), // in cents
-      },
-      quantity: item.quantity,
-    }));
+//     const lineItems = cart.map((item) => ({
+//       price_data: {
+//         currency: "usd",
+//         product_data: {
+//           name: item.name,
+//           images: [item.image],
+//         },
+//         unit_amount: Math.round(item.price * 100), // in cents
+//       },
+//       quantity: item.quantity,
+//     }));
 
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: lineItems,
-      mode: 'payment',
-      success_url: `${process.env.FRONTEND_URL}/success`,
-      cancel_url: `${process.env.FRONTEND_URL}/cart`,
-    });
+//     const session = await stripe.checkout.sessions.create({
+//       payment_method_types: ['card'],
+//       line_items: lineItems,
+//       mode: 'payment',
+//       success_url: `${process.env.FRONTEND_URL}/success`,
+//       cancel_url: `${process.env.FRONTEND_URL}/cart`,
+//     });
 
-    return res.status(200).json({
-      message: "✅ Session created",
-      url: session.url,
-    });
-  } catch (error) {
-    console.error("❌ Checkout Error:", error.message);
-    res.status(500).json({ message: error.message }); // ✅ This alone is safe
-  }
-};
+//     return res.status(200).json({
+//       message: "✅ Session created",
+//       url: session.url,
+//     });
+//   } catch (error) {
+//     console.error("❌ Checkout Error:", error.message);
+//     res.status(500).json({ message: error.message }); // ✅ This alone is safe
+//   }
+// };
 
-export const PayPalCheckOut = async (req, res) => {
-  try {
-    const cart = req.body;
+// export const PayPalCheckOut = async (req, res) => {
+//   try {
+//     const cart = req.body;
 
-    if (!Array.isArray(cart) || cart.length === 0) {
-      return res.status(400).json({ message: "❌ Empty cart" });
-    }
+//     if (!Array.isArray(cart) || cart.length === 0) {
+//       return res.status(400).json({ message: "❌ Empty cart" });
+//     }
 
-    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+//     const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-    const request = new paypal.orders.OrdersCreateRequest();
-    request.prefer("return=representation");
-    request.requestBody({
-      intent: "CAPTURE",
-      purchase_units: [{
-        amount: {
-          currency_code: "USD",
-          value: total.toFixed(2),
-        },
-      }],
-      application_context: {
-        return_url: `${process.env.FRONTEND_URL}/paypal-success`,
-        cancel_url: `${process.env.FRONTEND_URL}/cart`,
-      },
-    });
+//     const request = new paypal.orders.OrdersCreateRequest();
+//     request.prefer("return=representation");
+//     request.requestBody({
+//       intent: "CAPTURE",
+//       purchase_units: [{
+//         amount: {
+//           currency_code: "USD",
+//           value: total.toFixed(2),
+//         },
+//       }],
+//       application_context: {
+//         return_url: `${process.env.FRONTEND_URL}/paypal-success`,
+//         cancel_url: `${process.env.FRONTEND_URL}/cart`,
+//       },
+//     });
 
-    const order = await paypalClient.execute(request);
+//     const order = await paypalClient.execute(request);
 
-    const approvalUrl = order.result.links.find(link => link.rel === "approve")?.href;
+//     const approvalUrl = order.result.links.find(link => link.rel === "approve")?.href;
 
-    if (!approvalUrl) {
-      console.error("❌ No approval URL found in PayPal response");
-      return res.status(500).json({ message: "No approval URL returned from PayPal" });
-    }
+//     if (!approvalUrl) {
+//       console.error("❌ No approval URL found in PayPal response");
+//       return res.status(500).json({ message: "No approval URL returned from PayPal" });
+//     }
 
-    res.status(200).json({ approvalUrl });
+//     res.status(200).json({ approvalUrl });
 
-  } catch (error) {
-    console.error("❌ PayPal Checkout Error:", error.message);
-    res.status(500).json({ message: error.message });
-  }
-};
+//   } catch (error) {
+//     console.error("❌ PayPal Checkout Error:", error.message);
+//     res.status(500).json({ message: error.message });
+//   }
+// };

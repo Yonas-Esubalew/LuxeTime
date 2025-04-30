@@ -13,6 +13,11 @@ import jwks from "jwks-rsa";
 import connectDB from "./config/connectDB.js";
 import { expressjwt } from "express-jwt";
 import UserRouter from "./routes/user.route.js";
+import AddressRouter from "./routes/address.route.js";
+import ProductRouter from "./routes/product.route.js";
+import CartRouter from "./routes/cart.route.js";
+import EmailRouter from "./routes/email.route.js";
+import CategoryRouter from "./routes/category.route.js";
 // import userRouter from "./routes/user.route.js";
 // import router from "./routes/authRoute.js";
 // import UserModel from "./models/user.model.js";
@@ -50,6 +55,12 @@ app.use(
 
 
 app.use("/api/user/auth0", UserRouter);
+app.use("/api/user-address", AddressRouter);
+app.use("/api/user-product", ProductRouter);
+app.use("/api/product/category", CategoryRouter);
+app.use("/api/cart", CartRouter);
+app.use("/api/email", EmailRouter);
+
 
 const verifyJwt = expressjwt({
   secret: jwks.expressJwtSecret({
@@ -70,6 +81,7 @@ app.use(() => {
     error.status = 401;
     next(error);
   });
+  
   
   app.use((error, req, res, next) => {
     const status = error.status || 500;

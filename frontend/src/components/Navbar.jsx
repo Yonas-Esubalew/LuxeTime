@@ -26,7 +26,7 @@ import SummaryApi from "../common/SummaryApi.js";
 
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-// import { setUserDetails } from "../store/userSlice.js";
+import { setUserDetails } from "../store/userSlice.js";
 import { useNavigate } from "react-router-dom";
 
 export const Navbar = () => {
@@ -72,7 +72,7 @@ export const Navbar = () => {
 
         if (receivedData) {
           console.log("📦 Received User Data:", receivedData);
-          dispatch(setUserDetails(receivedData));
+        //   dispatch(setUserDetails(receivedData));
           toast.success("User data loaded successfully");
         } else {
           throw new Error("Invalid response structure");
@@ -80,16 +80,8 @@ export const Navbar = () => {
       } catch (error) {
         console.error("❌ Fetch Error:", error.response?.data || error.message);
         toast.error(
-          error.response?.data?.message || "Failed to fetch user data"
-        );
-      }
-    };
+          error.response?.data?.message || "Failed to fetch user dat]);
 
-    fetchUserDetails();
-  }, [isAuthenticated, user?.sub, getAccessTokenSilently, dispatch]);
-
-  console.log("📌 Redux User Details:", userFetch);
- 
   const handleLogin = () => {
     loginWithRedirect({
       authorizationParams: {
