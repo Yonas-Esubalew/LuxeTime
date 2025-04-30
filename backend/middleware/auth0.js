@@ -65,3 +65,11 @@ export const verifyAccessToken = async (req, res, next) => {
     res.status(500).json({ message: "Internal Server Error", success: false });
   }
 };
+
+
+export const requireAdminRole = (req, res, next) => {
+  if (req.user?.role !== "ADMIN") {
+    return res.status(403).json({ message: "Forbidden: Admins only", success: false });
+  }
+  next();
+};

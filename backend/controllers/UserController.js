@@ -29,28 +29,25 @@ export async function SignupController(req, res) {
       $or: [{ email: userinfo.email }, { auth0Id: userinfo.sub }],
     });
 
-    // http://localhost:8080/api/auth0/email-verification
-
     if (!user) {
       const isSocialLogin = userinfo.email_verified === true;
 
       if (!isSocialLogin) {
-        // Email registration (password is not handled here, just email verification)
         user = new UserModel({
           auth0Id: newAuth0Id,
           name: userinfo.name,
           email: userinfo.email,
           picture: userinfo.picture,
           provider: "auth0",
-          isVerified: false, // Email verification is pending
+          isVerified: false, 
           access_token: accessToken,
-          refresh_token: "", // Not using refresh tokens in this flow
+          refresh_token: "", 
           last_login_date: Date.now(),
-          role: "USER", // Default to user role
+          role: "USER", 
         });
         console.log("A verification email has been sent to the user. 📧");
       } else {
-        // Social login (Google, Facebook, etc.)
+
         user = new UserModel({
           auth0Id: newAuth0Id,
           name: userinfo.name,
