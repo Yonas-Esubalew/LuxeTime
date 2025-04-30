@@ -1,8 +1,10 @@
 import router from 'express';
 
-import { SignupController } from '../controllers/UserController';
-import { verifyAccessToken } from '../middleware/auth0';
+import { SignupController } from '../controllers/UserController.js';
+import { verifyAccessToken } from '../middleware/auth0.js';
 
 const UserRouter = router.Router();
 
-UserRouter.post('/api/auth0/signup', verifyAccessToken,  SignupController);
+UserRouter.post('/signup', verifyAccessToken,  SignupController);
+
+export default UserRouter;

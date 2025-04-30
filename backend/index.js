@@ -7,10 +7,12 @@ import helmet from "helmet";
 // import passport from "passport";
 // import session from "express-session";
 // import { expressjwt } from "express-jwt";
-// import jwks from "jwks-rsa";
+import jwks from "jwks-rsa";
 // import axios from "axios";
 // Import database connection & routes
 import connectDB from "./config/connectDB.js";
+import { expressjwt } from "express-jwt";
+import UserRouter from "./routes/user.route.js";
 // import userRouter from "./routes/user.route.js";
 // import router from "./routes/authRoute.js";
 // import UserModel from "./models/user.model.js";
@@ -45,6 +47,22 @@ app.use(
     crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" },
   })
 );
+
+
+app.use("/api/user/auth0", UserRouter);
+
+const verifyJwt = expressjwt({
+  secret: jwks.expressJwtSecret({
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 5,
+    jwksUri: "https://dev-obzcyutqfowddcve.us.auth0.com/.well-known/jwks.json",
+  }),
+  audience: "i am Software Engineer",
+  issuer: "https://dev-obzcyutqfowddcve.us.auth0.com/",
+  algorithms: ["RS256"],
+});
+app.use(verifyJwt);
 
 
 app.use(() => {

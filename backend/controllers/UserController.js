@@ -1,7 +1,4 @@
-
-
-
-
+import UserModel from "../models/user.model.js";
 
 export async function SignupController(req, res) {
     try {
