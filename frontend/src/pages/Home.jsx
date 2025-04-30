@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 import { Navbar } from "../components/Navbar";
+import HeroSection1 from "../components/HeroSection";
 
 const Home = () => {
   // const { user, loginWithRedirect, logout, isAuthenticated, getAccessTokenSilently } = useAuth0();
@@ -42,45 +43,12 @@ const Home = () => {
       <div className="container mx-auto border  w-full bg-neutral-900 relative">
         <div className="w-full h-full">
           <Navbar />
-        </div>
-        {/* <div className="w-full bg-neutral-900 p-6 rounded-lg shadow-md">
+        </div> 
+        <div className="w-full bg-neutral-900 p-6 rounded-lg shadow-md">
           <HeroSection1 />
         </div>
-        <div className="w-full bg-neutral-900 p-6 rounded-lg shadow-md">
-          <Product2 />
-        </div>
-        <div className="w-full bg-neutral-900 p-6 rounded-lg shadow-md">
-          <Service3 />
-        </div>
-        <div>
-          <Carousel />
-        </div>
-        <div className="w-full bg-neutral-900 p-6 rounded-lg shadow-md">
-          <Content4 />
-        </div>
-        <div className="w-full bg-neutral-900 p-6 rounded-lg shadow-md">
-          {/* Store Photos */}
-          {/* <Content />
-        </div>
-        <div className="w-full bg-neutral-900 p-6 rounded-lg shadow-md">
-          <Content2 />
-        </div>
-        <div className="w-full bg-neutral-900 p-6 rounded-lg shadow-md">
-          <TrustedNumber />
-        </div>
-        <div className="w-full bg-neutral-900 p-6 rounded-lg shadow-md">
-          <Service2 />
-        </div>
-
-        <div className="w-full bg-neutral-900 p-6 rounded-lg shadow-md">
-          <Last />
-        </div>
-        <div className="w-full bg-neutral-900 p-6 rounded-lg shadow-md">
-          <Trusted />
-        </div>
-        <div className="w-full bg-neutral-900 p-6 rounded-lg shadow-md">
-          <Footer />
-        {/* </div> */} 
+      
+      
       </div> 
     </section>
   );
