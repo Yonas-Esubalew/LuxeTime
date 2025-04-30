@@ -95,9 +95,9 @@ export const Navbar = () => {
   };
   const handleLogout = () => {
     logout({ logoutParams: { returnTo: window.location.origin } });
-    localStorage.clear(); // Clear stored user data
-    sessionStorage.clear(); // Extra cleanup
-    window.location.reload(); // Force fresh login
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.reload();
   };
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
