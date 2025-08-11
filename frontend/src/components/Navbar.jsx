@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 // import logo3 from "../assets/Screensh.png";
 // import logo4 from "../assets/logo3.png";
 // import Search from "./Search";
@@ -25,8 +26,8 @@ import { useAuth0 } from "@auth0/auth0-react";
 import SummaryApi from "../common/SummaryApi.js";
 
 import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
-import { setUserDetails } from "../store/userSlice.js";
+// import { useDispatch, useSelector } from "react-redux";
+// import { setUserDetails } from "../store/userSlice.js";
 import { useNavigate } from "react-router-dom";
 
 export const Navbar = () => {
@@ -43,7 +44,7 @@ export const Navbar = () => {
 //   console.log("User From Header", userFetch);
 //   const cartItems = useSelector((state) => state.cart.items);
 //   console.log("cart from redux", cartItems);
-  const totalItems = (cartItems || []).length;
+  // const totalItems = (cartItems || []).length;
 
 
 
@@ -60,7 +61,7 @@ export const Navbar = () => {
         console.log("✅ Access Token Retrieved", token);
 
         console.log("🔍 Fetching User Data from API...");
-        const response = await Axios({
+        const response = await axios({
           ...SummaryApi.userinfo,
           headers: {
             Authorization: `Bearer ${token}`,
@@ -80,7 +81,13 @@ export const Navbar = () => {
       } catch (error) {
         console.error("❌ Fetch Error:", error.response?.data || error.message);
         toast.error(
-          error.response?.data?.message || "Failed to fetch user dat]);
+          error.response?.data?.message || "Failed to fetch user data"
+        );
+      }
+    };
+
+    fetchUserDetails();
+  }, [isAuthenticated, user, getAccessTokenSilently]);
 
   const handleLogin = () => {
     loginWithRedirect({
@@ -153,9 +160,9 @@ export const Navbar = () => {
       <div className="relative flex items-center justify-between">
         <div className="">
           {!isMobile ? (
-            <img className="w-full h-13" src={logo3} alt="Logo" />
-          ) : (
-            <img className="w-full h-13" src={logo4} alt="Logo" />
+            <div className="text-lg font-semibold tracking-wide">Brand</div>
+                      ) : (
+            <div className="text-lg font-semibold tracking-wide">Brand</div>
           )}
         </div>
 
