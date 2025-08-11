@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import EAR from "../assets/watches1.png";
-import TimeWatch from "../assets/time_Watch.png";
+import EAR from "../../assets/watches1.png";
+import TimeWatch from "../../assets/Time_Watch.png";
 import { useNavigate } from "react-router-dom";
 import SummaryApi from "../common/SummaryApi";
-import Axios from "../utils/Axios";
-import AxiosToastError from "../utils/AxiosToastError";
+import axios from "axios";
+// import AxiosToastError from "../utils/AxiosToastError";
 import toast from "react-hot-toast";
 
 const HeroSection1 = () => {
@@ -29,10 +29,7 @@ const HeroSection1 = () => {
     e.preventDefault();
 
     try {
-      const response = await Axios({
-        ...SummaryApi.email_submit,
-        data: data,
-      });
+                           const response = await axios.post("/api/email/create", data);
       if (response.data.error) {
         toast.error(response.data.message);
       }
